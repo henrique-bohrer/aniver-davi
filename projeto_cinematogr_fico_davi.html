@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <title>Davi: 18 Anos</title>
+    
+    <!-- Fontes Cinematográficas -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- GSAP para Animações -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        title: ['"Cinzel"', 'serif'],
+                        sans: ['"Inter"', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #000;
+            color: #f2efe8;
+            /* Inicia travado até o clique no ingresso */
+            overflow: hidden; 
+        }
+
+        /* Efeito de Vinheta e Granulação Suave de Filme */
+        .cinematic-overlay {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            background: radial-gradient(circle at center, transparent 30%, rgba(0,0,0,0.85) 100%),
+                        url('data:image/svg+xml;utf8,%3Csvg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noiseFilter"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noiseFilter)" opacity="0.04"/%3E%3C/svg%3E');
+            z-index: 40;
+        }
+
+        /* Design do Ingresso */
+        .ticket {
+            background: #111;
+            background-image: radial-gradient(circle at top right, #222, #050505);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255,255,255,0.1);
+            position: relative;
+        }
+        .ticket::before, .ticket::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 30px;
+            height: 30px;
+            background-color: #000;
+            border-radius: 50%;
+            transform: translateY(-50%);
+            box-shadow: inset 0 0 0 1px rgba(255,255,255,0.1);
+        }
+        .ticket::before { left: -15px; }
+        .ticket::after { right: -15px; }
+        .ticket-border {
+            border: 2px dashed rgba(255, 215, 0, 0.3); /* Dourado suave */
+        }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #000; }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
+    </style>
+</head>
+<body class="antialiased selection:bg-yellow-600 selection:text-white">
+
+    <!-- 
+      Hack do Tailwind CDN: 
+      Garante que as cores dinâmicas geradas pelo JS sejam lidas e compiladas.
+      Isso fica invisível na tela.
+    -->
+    <div class="hidden from-purple-900 to-indigo-950 text-purple-200 border-purple-500 from-emerald-900 to-teal-950 text-emerald-200 border-emerald-500 from-slate-900 to-zinc-950 text-blue-300 border-red-600 from-cyan-950 to-black text-cyan-400 border-cyan-500 from-orange-900 to-amber-950 text-orange-200 border-orange-500 bg-gradient-to-b"></div>
+
+    <!-- Áudio Oculto (Controlado pelo botão do ingresso) -->
+    <audio id="bgm" loop preload="auto"></audio>
+
+    <div class="cinematic-overlay"></div>
+
+    <!-- TELA 1: INGRESSO INTERATIVO (Resolve o Autoplay) -->
+    <div id="intro-screen" class="fixed inset-0 z-50 flex items-center justify-center bg-black transition-opacity duration-1000 p-4">
+        <div class="ticket w-full max-w-lg rounded-xl overflow-hidden flex flex-col items-center text-center p-8">
+            <div class="ticket-border w-full h-full p-8 rounded-lg flex flex-col items-center justify-center gap-6 relative">
+                <p class="font-title text-yellow-500/80 tracking-[0.4em] text-xs uppercase">Admissão Especial</p>
+                
+                <div>
+                    <h1 class="font-title text-4xl md:text-5xl text-white mb-2">DAVI: 18 ANOS</h1>
+                    <p class="font-sans text-white/50 tracking-widest text-sm uppercase">Uma História que Merece Ser Contada</p>
+                </div>
+                
+                <div class="w-full h-px bg-yellow-500/20 my-2"></div>
+                
+                <div class="grid grid-cols-2 gap-8 w-full text-left font-sans text-xs text-white/60 tracking-widest uppercase">
+                    <div>
+                        <span class="block text-white/30 mb-1">Poltrona</span>
+                        <span class="text-white text-lg">VIP</span>
+                    </div>
+                    <div>
+                        <span class="block text-white/30 mb-1">Data de Estreia</span>
+                        <span class="text-white text-lg">26 OUT 2026</span>
+                    </div>
+                </div>
+
+                <button id="start-btn" class="mt-8 font-title text-lg tracking-[0.2em] uppercase bg-yellow-600/20 hover:bg-yellow-600/40 text-yellow-500 border border-yellow-500/50 hover:border-yellow-500 px-8 py-4 rounded transition-all duration-300 w-full relative overflow-hidden group">
+                    <span class="relative z-10">Pegar Ingresso e Começar</span>
+                    <div class="absolute inset-0 h-full w-full bg-yellow-600/20 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"></div>
+                </button>
+                <p class="text-xs text-white/30 mt-2 font-sans">Pressione para iniciar a trilha sonora e a experiência.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- TELA 2: CONTEÚDO PRINCIPAL (Exibido após o clique) -->
+    <div id="main-content" class="hidden opacity-0">
+        
+        <!-- Hero Section -->
+        <section class="h-screen flex flex-col items-center justify-center text-center px-6 relative" id="hero">
+            <h1 class="font-title text-5xl md:text-8xl lg:text-[9rem] text-white tracking-widest mb-6 opacity-0 translate-y-10" id="hero-title">DAVI</h1>
+            <p class="font-sans text-white/60 tracking-[0.3em] text-sm md:text-xl font-light opacity-0 uppercase" id="hero-sub">A Grande Estreia</p>
+            
+            <div class="absolute bottom-10 flex flex-col items-center opacity-0" id="hero-scroll">
+                <p class="font-sans text-xs text-white/40 tracking-widest uppercase mb-4">Role para iniciar</p>
+                <div class="w-[1px] h-16 bg-gradient-to-b from-white/40 to-transparent"></div>
+            </div>
+        </section>
+
+        <!-- Container onde o JS vai renderizar os 5 Atos -->
+        <main id="acts-container"></main>
+
+        <!-- Seção de Créditos -->
+        <section class="min-h-screen bg-black flex flex-col items-center justify-center py-32 px-6" id="credits-section">
+            <h2 class="font-title text-3xl md:text-4xl text-yellow-500 mb-20 tracking-[0.3em] uppercase credits-item">Créditos Finais</h2>
+            <div id="credits-list" class="space-y-16 text-center w-full max-w-2xl"></div>
+            
+            <div class="mt-32 credits-item opacity-0">
+                <p class="font-sans text-white/40 tracking-widest uppercase text-xs mb-4">Uma produção</p>
+                <h3 class="font-title text-3xl text-white tracking-[0.2em]">Bohrer Pictures</h3>
+            </div>
+        </section>
+    </div>
+
+    <!-- DADOS DO FILME & LÓGICA -->
+    <script>
+        const CONFIG = {
+            // 🎬 INSTRUÇÃO: Para usar o seu áudio, troque a URL abaixo para "fotos/trilha.mp3"
+            music: "https://upload.wikimedia.org/wikipedia/commons/transcoded/1/12/Gymnop%C3%A9die_No._1.ogg/Gymnop%C3%A9die_No._1.ogg.mp3",
+            acts: [
+                {
+                    id: "laika",
+                    movie: "Laika Studios",
+                    quote: "“Se você tem que piscar, faça-o agora.” — Kubo e as Cordas Mágicas",
+                    themeColor: "from-purple-900 to-indigo-950",
+                    textColor: "text-purple-200",
+                    accent: "border-purple-500",
+                    media: [
+                        { type: "image", src: "fotos/01.jpg", caption: "Onde toda a magia e os detalhes começaram." },
+                        { type: "image", src: "fotos/02.jpg", caption: "Criando nossos próprios mundos desde cedo." }
+                    ]
+                },
+                {
+                    id: "httyd",
+                    movie: "Como Treinar o seu Dragão",
+                    quote: "“O que quer que você esteja procurando não está lá fora... Está aqui.”",
+                    themeColor: "from-emerald-900 to-teal-950",
+                    textColor: "text-emerald-200",
+                    accent: "border-emerald-500",
+                    media: [
+                        { type: "image", src: "fotos/03.jpg", caption: "Voando alto e descobrindo coisas novas." },
+                        { type: "image", src: "fotos/04.jpg", caption: "A parceria que supera qualquer desafio." }
+                    ]
+                },
+                {
+                    id: "transformers",
+                    movie: "Transformers",
+                    quote: "“Nós somos mais do que os olhos podem ver.” — Optimus Prime",
+                    themeColor: "from-slate-900 to-zinc-950",
+                    textColor: "text-blue-300",
+                    accent: "border-red-600",
+                    media: [
+                        { type: "image", src: "fotos/05.jpg", caption: "Em constante transformação e evolução." },
+                        { type: "image", src: "fotos/06.jpg", caption: "Prontos para qualquer batalha juntos." }
+                    ]
+                },
+                {
+                    id: "godzilla",
+                    movie: "Godzilla",
+                    quote: "“A arrogância do homem é pensar que a natureza está sob nosso controle.”",
+                    themeColor: "from-cyan-950 to-black",
+                    textColor: "text-cyan-400",
+                    accent: "border-cyan-500",
+                    media: [
+                        { type: "image", src: "fotos/07.jpg", caption: "Momentos épicos e gigantescos." },
+                        { type: "image", src: "fotos/08.jpg", caption: "Uma força da natureza imparável." }
+                    ]
+                },
+                {
+                    id: "wildrobot",
+                    movie: "Robô Selvagem",
+                    quote: "“Às vezes, para sobreviver, você deve se tornar mais do que foi programado para ser.”",
+                    themeColor: "from-orange-900 to-amber-950",
+                    textColor: "text-orange-200",
+                    accent: "border-orange-500",
+                    media: [
+                        { type: "image", src: "fotos/09.jpg", caption: "Encontrando o nosso coração em meio ao caos." },
+                        { type: "image", src: "fotos/10.jpg", caption: "Davi, 18 Anos. Você é incrível." },
+                        // 🎬 INSTRUÇÃO: Para usar o seu vídeo, troque a URL abaixo para "fotos/11.mp4"
+                        { type: "video", src: "https://upload.wikimedia.org/wikipedia/commons/transcoded/c/c0/Big_Buck_Bunny_4K.webm/Big_Buck_Bunny_4K.webm.360p.vp9.webm", caption: "Nossa história em movimento. Feliz aniversário, irmão." }
+                    ]
+                }
+            ],
+            credits: [
+                { role: "Estrelando", name: "Davi Bressiani Bohrer" },
+                { role: "Direção, Roteiro e Parceria", name: "Henrique Bressiani Bohrer" },
+                { role: "Produção Executiva", name: "Mamãe e Papai" }
+            ]
+        };
+
+        document.addEventListener("DOMContentLoaded", () => {
+            gsap.registerPlugin(ScrollTrigger);
+
+            const audio = document.getElementById('bgm');
+            audio.src = CONFIG.music;
+            audio.volume = 0.5;
+
+            // ==========================================
+            // GERAÇÃO DINÂMICA DO DOM
+            // ==========================================
+            const actsContainer = document.getElementById('acts-container');
+            
+            CONFIG.acts.forEach((act, actIndex) => {
+                const actId = `act-${actIndex + 1}`;
+                let mediaHTML = '';
+
+                act.media.forEach((item, index) => {
+                    const isEven = index % 2 === 0;
+                    const alignment = isEven ? 'md:flex-row' : 'md:flex-row-reverse';
+                    const textAlign = isEven ? 'md:text-left' : 'md:text-right';
+                    const borderAlign = isEven ? 'border-l-2 pl-6' : 'md:border-l-0 md:border-r-2 md:pr-6 border-l-2 pl-6 md:pl-0';
+
+                    // Se for vídeo, insere a tag de vídeo, se não, tag de imagem.
+                    // Adicionei um div de fallback na imagem para caso ela não seja carregada no momento do teste.
+                    const mediaTag = item.type === 'video' 
+                        ? `<video src="${item.src}" controls playsinline class="absolute inset-0 w-full h-full object-cover bg-black"></video>`
+                        : `<img src="${item.src}" alt="Cena ${actIndex}-${index}" class="media-img absolute inset-0 w-full h-full object-cover origin-center bg-zinc-900" 
+                                onerror="this.outerHTML='<div class=\\'absolute inset-0 bg-zinc-900 flex items-center justify-center p-6 text-center text-white/30\\'>Adicione ${item.src} na pasta fotos</div>'">`;
+
+                    mediaHTML += `
+                        <div class="media-block min-h-screen flex items-center py-24 px-6 relative z-10 w-full max-w-7xl mx-auto">
+                            <div class="w-full flex flex-col ${alignment} items-center gap-12 md:gap-24">
+                                <div class="w-full md:w-1/2 overflow-hidden rounded-sm border border-white/10 shadow-2xl relative">
+                                    <div class="aspect-[4/5] md:aspect-video relative overflow-hidden bg-black">
+                                        ${mediaTag}
+                                    </div>
+                                </div>
+                                <div class="w-full md:w-1/2 flex flex-col justify-center text-center ${textAlign}">
+                                    <p class="font-sans font-light text-2xl md:text-4xl text-white leading-relaxed opacity-90 ${borderAlign} ${act.accent}">
+                                        ${item.caption}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                const actSection = `
+                    <!-- Ato usa o gradiente temático configurado -->
+                    <section class="act-section relative bg-gradient-to-b ${act.themeColor} pt-32 pb-10 border-t border-white/5" id="${actId}">
+                        
+                        <!-- Capa do Ato -->
+                        <div class="min-h-[70vh] flex flex-col items-center justify-center text-center px-6 relative z-10 max-w-4xl mx-auto mb-20 act-intro">
+                            <h3 class="font-sans text-xs tracking-[0.4em] uppercase text-white/50 mb-6">Ato ${actIndex + 1}</h3>
+                            <h2 class="font-title text-4xl md:text-6xl ${act.textColor} tracking-widest mb-10 drop-shadow-lg">${act.movie}</h2>
+                            <p class="font-title italic text-xl md:text-3xl text-white/80 leading-relaxed border-y border-white/10 py-8 px-4">
+                                ${act.quote}
+                            </p>
+                        </div>
+
+                        <!-- Cenas do Ato -->
+                        ${mediaHTML}
+                    </section>
+                `;
+                actsContainer.insertAdjacentHTML('beforeend', actSection);
+            });
+
+            // Geração dos Créditos
+            const creditsList = document.getElementById('credits-list');
+            CONFIG.credits.forEach(credit => {
+                creditsList.insertAdjacentHTML('beforeend', `
+                    <div class="credits-item opacity-0">
+                        <h4 class="font-sans text-white/50 text-sm tracking-[0.3em] uppercase mb-3">${credit.role}</h4>
+                        <p class="font-title text-2xl md:text-4xl text-white tracking-widest">${credit.name}</p>
+                    </div>
+                `);
+            });
+
+            // ==========================================
+            // LÓGICA DE INÍCIO (TICKET)
+            // ==========================================
+            const startBtn = document.getElementById('start-btn');
+            const introScreen = document.getElementById('intro-screen');
+            const mainContent = document.getElementById('main-content');
+
+            startBtn.addEventListener('click', async () => {
+                // Tenta tocar o áudio com tratamento de erros (impede falhas caso o arquivo não exista)
+                try {
+                    const audioPromise = audio.play();
+                    if (audioPromise !== undefined) {
+                        audioPromise.catch(e => {
+                            console.warn("Aviso de Áudio: Arquivo ausente ou bloqueado pelo navegador.", e);
+                        });
+                    }
+                } catch (err) {
+                    console.error("Falha crítica ao iniciar o áudio:", err);
+                }
+
+                // Esconde ingresso com fade out
+                gsap.to(introScreen, {
+                    opacity: 0,
+                    duration: 1.5,
+                    ease: "power2.inOut",
+                    onComplete: () => {
+                        introScreen.style.display = 'none';
+                        document.body.style.overflow = 'auto'; // Libera o scroll
+                        
+                        mainContent.classList.remove('hidden');
+                        
+                        // Adiciona tratamento de erro seguro para vídeos, para não quebrar a página
+                        document.querySelectorAll('video').forEach(video => {
+                            video.addEventListener('play', () => {
+                                try {
+                                    const videoPromise = video.play();
+                                    if (videoPromise !== undefined) {
+                                        videoPromise.catch(e => console.warn("Aviso de Vídeo: Falha ao reproduzir arquivo.", e));
+                                    }
+                                } catch (err) {
+                                    console.error("Erro na execução do vídeo:", err);
+                                }
+                            });
+                        });
+
+                        // Inicia as animações principais
+                        initMainAnimations();
+                    }
+                });
+            });
+
+            // ==========================================
+            // ANIMAÇÕES GSAP (Suaves e Previsíveis)
+            // ==========================================
+            function initMainAnimations() {
+                // Fade In do Conteúdo Principal
+                gsap.to(mainContent, { opacity: 1, duration: 1 });
+
+                // Animação do Hero
+                const tlHero = gsap.timeline();
+                tlHero.to("#hero-title", { opacity: 1, y: 0, duration: 2, ease: "power3.out", delay: 0.5 })
+                      .to("#hero-sub", { opacity: 1, duration: 2, ease: "power2.out" }, "-=1")
+                      .to("#hero-scroll", { opacity: 1, duration: 1 }, "-=0.5");
+
+                // Scroll do Hero sumindo
+                gsap.to("#hero", {
+                    opacity: 0,
+                    y: -100,
+                    scrollTrigger: {
+                        trigger: "#hero",
+                        start: "top top",
+                        end: "bottom top",
+                        scrub: true
+                    }
+                });
+
+                // Animação de entrada dos títulos dos Atos
+                document.querySelectorAll('.act-intro').forEach(intro => {
+                    gsap.fromTo(intro.children, 
+                        { opacity: 0, y: 30 },
+                        {
+                            opacity: 1, y: 0,
+                            duration: 1.5,
+                            stagger: 0.3,
+                            ease: "power2.out",
+                            scrollTrigger: {
+                                trigger: intro,
+                                start: "top 75%",
+                            }
+                        }
+                    );
+                });
+
+                // Animação de entrada fluida para Mídias e Textos
+                document.querySelectorAll('.media-block').forEach(block => {
+                    const elements = block.children[0].children; // Pegando os divs internos (imagem e texto)
+
+                    gsap.fromTo(elements,
+                        { opacity: 0, y: 50 },
+                        {
+                            opacity: 1, y: 0,
+                            duration: 1.5,
+                            stagger: 0.2, // Um entra suavemente depois do outro
+                            ease: "power2.out",
+                            scrollTrigger: {
+                                trigger: block,
+                                start: "top 80%", // Dispara de forma previsível e adiantada
+                            }
+                        }
+                    );
+
+                    // Parallax sutil apenas nas IMAGENS (Ken Burns invertido)
+                    const img = block.querySelector('.media-img');
+                    if (img) {
+                        gsap.fromTo(img,
+                            { scale: 1 },
+                            {
+                                scale: 1.1,
+                                ease: "none",
+                                scrollTrigger: {
+                                    trigger: block,
+                                    start: "top bottom",
+                                    end: "bottom top",
+                                    scrub: true // Acompanha o dedo/mouse
+                                }
+                            }
+                        );
+                    }
+                });
+
+                // Animação dos Créditos
+                gsap.fromTo(".credits-item",
+                    { opacity: 0, y: 20 },
+                    {
+                        opacity: 1, y: 0,
+                        duration: 1.5,
+                        stagger: 0.4,
+                        ease: "power2.out",
+                        scrollTrigger: {
+                            trigger: "#credits-section",
+                            start: "top 70%",
+                        }
+                    }
+                );
+            }
+        });
+    </script>
+</body>
+</html>
