@@ -328,36 +328,45 @@
                 }
 
                 // Esconde ingresso com fade out
-                gsap.to(introScreen, {
-                    opacity: 0,
-                    duration: 1.5,
-                    ease: "power2.inOut",
-                    onComplete: () => {
-                        introScreen.style.display = 'none';
-                        document.body.style.overflow = 'auto'; // Libera o scroll
-                        
-                        mainContent.classList.remove('hidden');
-                        
-                        // Adiciona tratamento de erro seguro para vídeos, para não quebrar a página
-                        document.querySelectorAll('video').forEach(video => {
-                            video.addEventListener('play', () => {
-                                try {
-                                    const videoPromise = video.play();
-                                    if (videoPromise !== undefined) {
-                                        videoPromise.catch(e => console.warn("Aviso de Vídeo: Falha ao reproduzir arquivo.", e));
-                                    }
-                                } catch (err) {
-                                    console.error("Erro na execução do vídeo:", err);
-                                }
-                            });
-                        });
+                // Esconde ingresso com fade out
+gsap.to(introScreen, {
+    opacity: 0,
+    duration: 1.5,
+    ease: "power2.inOut",
+    onComplete: () => {
+        introScreen.style.display = 'none';
 
-                        // Inicia as animações principais
-                        initMainAnimations();
+        // Tudo que antes acontecia aqui agora só acontece depois do prólogo
+        const continuar = () => {
+            document.body.style.overflow = 'auto'; // Libera o scroll
+            mainContent.classList.remove('hidden');
+
+            // Tratamento de erro seguro para vídeos, para não quebrar a página
+            document.querySelectorAll('video').forEach(video => {
+                video.addEventListener('play', () => {
+                    try {
+                        const videoPromise = video.play();
+                        if (videoPromise !== undefined) {
+                            videoPromise.catch(e => console.warn("Aviso de Vídeo: Falha ao reproduzir arquivo.", e));
+                        }
+                    } catch (err) {
+                        console.error("Erro na execução do vídeo:", err);
                     }
                 });
             });
 
+            // Inicia as animações principais
+            initMainAnimations();
+        };
+
+        // Se o prologo.js estiver carregado, mostra o prólogo antes; senão segue direto
+        if (window.Prologo) {
+            Prologo.abrir(continuar);
+        } else {
+            continuar();
+        }
+    }
+});
             // ==========================================
             // ANIMAÇÕES GSAP (Suaves e Previsíveis)
             // ==========================================
