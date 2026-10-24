@@ -11,7 +11,8 @@ const APOIADORES = {
   kicker: "Mensagens para o Davi",
   titulo: "HALL DOS APOIADORES",
   pessoas: [
-    {nome: "Ghioni Romanovski", relacao: "Amigo da família", video: "videos/ghioni.mp4", capa: ""}
+    {nome: "Ghioni Romanovski", relacao: "Amigo da família", video: "videos/ghioni.mp4", capa: ""},
+    {nome: "Tia Preta", relacao: "Tia do Davi", video: "videos/tia-preta.mp4", capa: ""}
     // {nome: "Nome da pessoa", relacao: "Quem é para o Davi", video: "videos/nome.mp4", capa: ""},
   ]
 };
