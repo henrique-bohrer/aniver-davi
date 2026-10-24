@@ -4,15 +4,15 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <title>Davi: 18 Anos</title>
-    
+
     <!-- Fontes Cinematográficas -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
-    
+
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    
+
     <!-- GSAP para Animações -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
@@ -35,7 +35,7 @@
             background-color: #000;
             color: #f2efe8;
             /* Inicia travado até o clique no ingresso */
-            overflow: hidden; 
+            overflow: hidden;
         }
 
         /* Efeito de Vinheta e Granulação Suave de Filme */
@@ -79,8 +79,8 @@
 </head>
 <body class="antialiased selection:bg-yellow-600 selection:text-white">
 
-    <!-- 
-      Hack do Tailwind CDN: 
+    <!--
+      Hack do Tailwind CDN:
       Garante que as cores dinâmicas geradas pelo JS sejam lidas e compiladas.
       Isso fica invisível na tela.
     -->
@@ -96,14 +96,14 @@
         <div class="ticket w-full max-w-lg rounded-xl overflow-hidden flex flex-col items-center text-center p-8">
             <div class="ticket-border w-full h-full p-8 rounded-lg flex flex-col items-center justify-center gap-6 relative">
                 <p class="font-title text-yellow-500/80 tracking-[0.4em] text-xs uppercase">Admissão Especial</p>
-                
+
                 <div>
                     <h1 class="font-title text-4xl md:text-5xl text-white mb-2">DAVI: 18 ANOS</h1>
                     <p class="font-sans text-white/50 tracking-widest text-sm uppercase">Uma História que Merece Ser Contada</p>
                 </div>
-                
+
                 <div class="w-full h-px bg-yellow-500/20 my-2"></div>
-                
+
                 <div class="grid grid-cols-2 gap-8 w-full text-left font-sans text-xs text-white/60 tracking-widest uppercase">
                     <div>
                         <span class="block text-white/30 mb-1">Poltrona</span>
@@ -126,12 +126,12 @@
 
     <!-- TELA 2: CONTEÚDO PRINCIPAL (Exibido após o clique) -->
     <div id="main-content" class="hidden opacity-0">
-        
+
         <!-- Hero Section -->
         <section class="h-screen flex flex-col items-center justify-center text-center px-6 relative" id="hero">
             <h1 class="font-title text-5xl md:text-8xl lg:text-[9rem] text-white tracking-widest mb-6 opacity-0 translate-y-10" id="hero-title">DAVI</h1>
             <p class="font-sans text-white/60 tracking-[0.3em] text-sm md:text-xl font-light opacity-0 uppercase" id="hero-sub">A Grande Estreia</p>
-            
+
             <div class="absolute bottom-10 flex flex-col items-center opacity-0" id="hero-scroll">
                 <p class="font-sans text-xs text-white/40 tracking-widest uppercase mb-4">Role para iniciar</p>
                 <div class="w-[1px] h-16 bg-gradient-to-b from-white/40 to-transparent"></div>
@@ -145,7 +145,7 @@
         <section class="min-h-screen bg-black flex flex-col items-center justify-center py-32 px-6" id="credits-section">
             <h2 class="font-title text-3xl md:text-4xl text-yellow-500 mb-20 tracking-[0.3em] uppercase credits-item">Créditos Finais</h2>
             <div id="credits-list" class="space-y-16 text-center w-full max-w-2xl"></div>
-            
+
             <div class="mt-32 credits-item opacity-0">
                 <p class="font-sans text-white/40 tracking-widest uppercase text-xs mb-4">Uma produção</p>
                 <h3 class="font-title text-3xl text-white tracking-[0.2em]">Bohrer Pictures</h3>
@@ -240,7 +240,7 @@
             // GERAÇÃO DINÂMICA DO DOM
             // ==========================================
             const actsContainer = document.getElementById('acts-container');
-            
+
             CONFIG.acts.forEach((act, actIndex) => {
                 const actId = `act-${actIndex + 1}`;
                 let mediaHTML = '';
@@ -253,9 +253,9 @@
 
                     // Se for vídeo, insere a tag de vídeo, se não, tag de imagem.
                     // Adicionei um div de fallback na imagem para caso ela não seja carregada no momento do teste.
-                    const mediaTag = item.type === 'video' 
+                    const mediaTag = item.type === 'video'
                         ? `<video src="${item.src}" controls playsinline class="absolute inset-0 w-full h-full object-cover bg-black"></video>`
-                        : `<img src="${item.src}" alt="Cena ${actIndex}-${index}" class="media-img absolute inset-0 w-full h-full object-cover origin-center bg-zinc-900" 
+                        : `<img src="${item.src}" alt="Cena ${actIndex}-${index}" class="media-img absolute inset-0 w-full h-full object-cover origin-center bg-zinc-900"
                                 onerror="this.outerHTML='<div class=\\'absolute inset-0 bg-zinc-900 flex items-center justify-center p-6 text-center text-white/30\\'>Adicione ${item.src} na pasta fotos</div>'">`;
 
                     mediaHTML += `
@@ -279,7 +279,7 @@
                 const actSection = `
                     <!-- Ato usa o gradiente temático configurado -->
                     <section class="act-section relative bg-gradient-to-b ${act.themeColor} pt-32 pb-10 border-t border-white/5" id="${actId}">
-                        
+
                         <!-- Capa do Ato -->
                         <div class="min-h-[70vh] flex flex-col items-center justify-center text-center px-6 relative z-10 max-w-4xl mx-auto mb-20 act-intro">
                             <h3 class="font-sans text-xs tracking-[0.4em] uppercase text-white/50 mb-6">Ato ${actIndex + 1}</h3>
@@ -335,9 +335,9 @@
                     onComplete: () => {
                         introScreen.style.display = 'none';
                         document.body.style.overflow = 'auto'; // Libera o scroll
-                        
+
                         mainContent.classList.remove('hidden');
-                        
+
                         // Adiciona tratamento de erro seguro para vídeos, para não quebrar a página
                         document.querySelectorAll('video').forEach(video => {
                             video.addEventListener('play', () => {
@@ -385,7 +385,7 @@
 
                 // Animação de entrada dos títulos dos Atos
                 document.querySelectorAll('.act-intro').forEach(intro => {
-                    gsap.fromTo(intro.children, 
+                    gsap.fromTo(intro.children,
                         { opacity: 0, y: 30 },
                         {
                             opacity: 1, y: 0,
