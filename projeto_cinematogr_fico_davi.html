@@ -314,86 +314,72 @@
             const introScreen = document.getElementById('intro-screen');
             const mainContent = document.getElementById('main-content');
 
-            startBtn.addEventListener('click', async () => {
-                // Tenta tocar o áudio com tratamento de erros (impede falhas caso o arquivo não exista)
+            startBtn.addEventListener('click', () => {
+                // Prepara os áudios no clique (o navegador só libera som depois de um clique)
+                if (window.Dialogo) Dialogo.preparar();
                 try {
-                    const audioPromise = audio.play();
-                    if (audioPromise !== undefined) {
-                        audioPromise.catch(e => {
-                            console.warn("Aviso de Áudio: Arquivo ausente ou bloqueado pelo navegador.", e);
-                        });
-                    }
-                } catch (err) {
-                    console.error("Falha crítica ao iniciar o áudio:", err);
-                }
+                    audio.muted = true;
+                    audio.play().then(() => { audio.pause(); audio.currentTime = 0; audio.muted = false; }).catch(() => { audio.muted = false; });
+                } catch (err) { audio.muted = false; }
 
-                // Esconde ingresso com fade out
+                const comecarMusica = () => {
+                    try {
+                        const p = audio.play();
+                        if (p !== undefined) p.catch(e => console.warn("Aviso de Áudio: arquivo ausente ou bloqueado.", e));
+                    } catch (err) {
+                        console.error("Falha ao iniciar o áudio:", err);
+                    }
+                };
+
                 gsap.to(introScreen, {
                     opacity: 0,
                     duration: 1.5,
                     ease: "power2.inOut",
                     onComplete: () => {
                         introScreen.style.display = 'none';
-                        document.body.style.overflow = 'auto'; // Libera o scroll
 
-                        mainContent.classList.remove('hidden');
+                        const continuar = () => {
+                            document.body.style.overflow = 'auto';
+                            mainContent.classList.remove('hidden');
 
-                        // Adiciona tratamento de erro seguro para vídeos, para não quebrar a página
-                        document.querySelectorAll('video').forEach(video => {
-                            video.addEventListener('play', () => {
-                                try {
-                                    const videoPromise = video.play();
-                                    if (videoPromise !== undefined) {
-                                        videoPromise.catch(e => console.warn("Aviso de Vídeo: Falha ao reproduzir arquivo.", e));
+                            document.querySelectorAll('video').forEach(video => {
+                                video.addEventListener('play', () => {
+                                    try {
+                                        const videoPromise = video.play();
+                                        if (videoPromise !== undefined) {
+                                            videoPromise.catch(e => console.warn("Aviso de Vídeo: Falha ao reproduzir arquivo.", e));
+                                        }
+                                    } catch (err) {
+                                        console.error("Erro na execução do vídeo:", err);
                                     }
-                                } catch (err) {
-                                    console.error("Erro na execução do vídeo:", err);
-                                }
+                                });
                             });
-                        });
-                // Esconde ingresso com fade out
-gsap.to(introScreen, {
-    opacity: 0,
-    duration: 1.5,
-    ease: "power2.inOut",
-    onComplete: () => {
-        introScreen.style.display = 'none';
 
-        // Tudo que antes acontecia aqui agora só acontece depois do prólogo
-        const continuar = () => {
-            document.body.style.overflow = 'auto'; // Libera o scroll
-            mainContent.classList.remove('hidden');
+                            initMainAnimations();
+                        };
 
-            // Tratamento de erro seguro para vídeos, para não quebrar a página
-            document.querySelectorAll('video').forEach(video => {
-                video.addEventListener('play', () => {
-                    try {
-                        const videoPromise = video.play();
-                        if (videoPromise !== undefined) {
-                            videoPromise.catch(e => console.warn("Aviso de Vídeo: Falha ao reproduzir arquivo.", e));
+                        const prologo = () => {
+                            if (window.Prologo) { Prologo.abrir(continuar); } else { continuar(); }
+                        };
+
+                        if (window.Dialogo) {
+                            Dialogo.abrir(() => { comecarMusica(); prologo(); });
+                        } else {
+                            comecarMusica();
+                            prologo();
                         }
-                    } catch (err) {
-                        console.error("Erro na execução do vídeo:", err);
                     }
                 });
             });
 
             // Inicia as animações principais
             initMainAnimations();
-        };
+        });
 
-        // Se o prologo.js estiver carregado, mostra o prólogo antes; senão segue direto
-        if (window.Prologo) {
-            Prologo.abrir(continuar);
-        } else {
-            continuar();
-        }
-    }
-});
-            // ==========================================
-            // ANIMAÇÕES GSAP (Suaves e Previsíveis)
-            // ==========================================
-            function initMainAnimations() {
+        // ==========================================
+        // ANIMAÇÕES GSAP (Suaves e Previsíveis)
+        // ==========================================
+        function initMainAnimations() {
                 // Fade In do Conteúdo Principal
                 gsap.to(mainContent, { opacity: 1, duration: 1 });
 
@@ -484,11 +470,11 @@ gsap.to(introScreen, {
                     }
                 );
             }
-        });
     </script>
     <script src="detalhes.js"></script>
     <script src="extras.js"></script>
     <script src="prologo.js"></script>
     <script src="cenas.js"></script>
+    <script src="dialogo.js"></script>
 </body>
 </html>
