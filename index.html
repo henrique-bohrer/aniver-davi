@@ -225,7 +225,7 @@
             credits: [
                 { role: "Estrelando", name: "Davi Bressiani Bohrer" },
                 { role: "Direção, Roteiro e Parceria", name: "Henrique Bressiani Bohrer" },
-                { role: "Produção Executiva", name: "Mamãe e Papai" }
+                { role: "Produção Executiva", name: "Clarie Bressiani, Romulo Scherer Baldissera e Alexandre Dalla Lana Bohrer" }
             ]
         };
 
@@ -338,6 +338,7 @@
                     onComplete: () => {
                         introScreen.style.display = 'none';
 
+                        // Libera o site: scroll, conteúdo e animações
                         const continuar = () => {
                             document.body.style.overflow = 'auto';
                             mainContent.classList.remove('hidden');
@@ -358,38 +359,28 @@
                             initMainAnimations();
                         };
 
-                        const prologo = () => {
-                            if (window.Prologo) { Prologo.abrir(continuar); } else { continuar(); }
-                        };
-
+                        // Diálogo estilo Undertale -> música do site -> conteúdo principal
                         if (window.Dialogo) {
-                            Dialogo.abrir(() => { comecarMusica(); prologo(); });
+                            Dialogo.abrir(() => { comecarMusica(); continuar(); });
                         } else {
                             comecarMusica();
-                            prologo();
+                            continuar();
                         }
                     }
                 });
             });
 
-            // Inicia as animações principais
-            initMainAnimations();
-        });
-
-        // ==========================================
-        // ANIMAÇÕES GSAP (Suaves e Previsíveis)
-        // ==========================================
-        function initMainAnimations() {
-                // Fade In do Conteúdo Principal
+            // ==========================================
+            // ANIMAÇÕES GSAP (Suaves e Previsíveis)
+            // ==========================================
+            function initMainAnimations() {
                 gsap.to(mainContent, { opacity: 1, duration: 1 });
 
-                // Animação do Hero
                 const tlHero = gsap.timeline();
                 tlHero.to("#hero-title", { opacity: 1, y: 0, duration: 2, ease: "power3.out", delay: 0.5 })
-                      .to("#hero-sub", { opacity: 1, duration: 2, ease: "power2.out" }, "-=1")
-                      .to("#hero-scroll", { opacity: 1, duration: 1 }, "-=0.5");
+                    .to("#hero-sub", { opacity: 1, duration: 2, ease: "power2.out" }, "-=1")
+                    .to("#hero-scroll", { opacity: 1, duration: 1 }, "-=0.5");
 
-                // Scroll do Hero sumindo
                 gsap.to("#hero", {
                     opacity: 0,
                     y: -100,
@@ -401,7 +392,6 @@
                     }
                 });
 
-                // Animação de entrada dos títulos dos Atos
                 document.querySelectorAll('.act-intro').forEach(intro => {
                     gsap.fromTo(intro.children,
                         { opacity: 0, y: 30 },
@@ -418,25 +408,23 @@
                     );
                 });
 
-                // Animação de entrada fluida para Mídias e Textos
                 document.querySelectorAll('.media-block').forEach(block => {
-                    const elements = block.children[0].children; // Pegando os divs internos (imagem e texto)
+                    const elements = block.children[0].children;
 
                     gsap.fromTo(elements,
                         { opacity: 0, y: 50 },
                         {
                             opacity: 1, y: 0,
                             duration: 1.5,
-                            stagger: 0.2, // Um entra suavemente depois do outro
+                            stagger: 0.2,
                             ease: "power2.out",
                             scrollTrigger: {
                                 trigger: block,
-                                start: "top 80%", // Dispara de forma previsível e adiantada
+                                start: "top 80%",
                             }
                         }
                     );
 
-                    // Parallax sutil apenas nas IMAGENS (Ken Burns invertido)
                     const img = block.querySelector('.media-img');
                     if (img) {
                         gsap.fromTo(img,
@@ -448,14 +436,13 @@
                                     trigger: block,
                                     start: "top bottom",
                                     end: "bottom top",
-                                    scrub: true // Acompanha o dedo/mouse
+                                    scrub: true
                                 }
                             }
                         );
                     }
                 });
 
-                // Animação dos Créditos
                 gsap.fromTo(".credits-item",
                     { opacity: 0, y: 20 },
                     {
@@ -470,10 +457,10 @@
                     }
                 );
             }
+        });
     </script>
     <script src="detalhes.js"></script>
     <script src="extras.js"></script>
-    <script src="prologo.js"></script>
     <script src="cenas.js"></script>
     <script src="dialogo.js"></script>
 </body>
