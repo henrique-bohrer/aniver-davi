@@ -10,7 +10,7 @@
 // ----- EDITE AQUI --------------------------------------------------------
 const DIALOGO = {
   musica: "audio/his-theme.mp3",
-  volumeMusica: 0.15,
+  volumeMusica: 0.05,
   fonte: "fontes/DeterminationMono.ttf",
   voz: {freq: 520, variacao: 70, volume: 0.05},   // "barulhinho" de cada letra (volume baixo e suave)
 
@@ -26,7 +26,7 @@ const DIALOGO = {
   // Parte 2: "rolar" = texto subindo pela tela | "falas" = falas digitadas, uma por clique
   parte2: {
     modo: "rolar",
-    velocidade: 55,                // pixels por segundo, só no modo "rolar"
+    velocidade: 40,                // pixels por segundo, só no modo "rolar"
     linhas: [
       "Você escreveu um livro aos 16 anos.",
       "Você já passou por muita coisa.",
@@ -37,7 +37,7 @@ const DIALOGO = {
       "E nós temos muito orgulho de você.",
       "Sempre estaremos aqui para você.",
       "Todos os dias, seu grande irmão Henrique, se orgulha de você.",
-      "Ele sabe que você tem um grande coração, cheio de bondade, amor e muita determinacão.",
+      "Ele sabe que você tem um grande coração, cheio de bondade, amor e muita determinação.",
       "Ele sabe que você é uma pessoa incrível, e que você merece tudo de bom na vida.",
       "Nunca se esqueça disso, Davi.",
       "Você é uma pessoa incrível, e nós te amamos muito.",

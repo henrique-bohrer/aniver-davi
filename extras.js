@@ -21,7 +21,7 @@ const EXTRAS = {
   },
   bastidores: [  // vídeo é opcional: "fotos/mamae.mp4"
     {nome: "Mamãe", texto: "Escreva aqui um momento específico em que você viu o Davi conseguir algo difícil.", video: ""},
-    {nome: "Papai", texto: "Escreva aqui um momento específico em que você viu o Davi conseguir algo difícil.", video: ""},
+    {nome: "Alexandre e Clenir", texto: "Meu Davi, Hoje você completa 18 anos! Ver você chegar à vida adulta é um misto de orgulho imenso e da certeza de que o tempo voa, mas o meu amor por você só cresce a cada dia. Quero que você saiba que o amor que sinto por você é gigante e infinito. Você merece conquistar o mundo e receber de volta tudo de melhor que a vida tem a oferecer. Entrar nessa nova fase é dar passos importantes, mas saiba que você nunca estará sozinho: estou sempre orando por você, pedindo a Deus que ilumine seus caminhos e torcendo com todo o meu coração pelo seu sucesso em cada escolha que fizer. Que o seu novo ciclo seja repleto de realizações, alegrias e muita sabedoria. Feliz 18 anos! Amo muito você! ❤️🎉✨", video: ""},
     {nome: "Henrique", texto: "Escreva aqui um momento específico em que você viu o Davi conseguir algo difícil.", video: ""}
   ],
   epilogo: "Todo bom filme tem um momento difícil antes da virada. O terceiro ato do Davi ainda está sendo escrito.",
