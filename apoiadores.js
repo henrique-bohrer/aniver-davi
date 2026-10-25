@@ -13,9 +13,10 @@ const APOIADORES = {
   titulo: "HALL DOS APOIADORES",
   pessoas: [
     {nome: "Ghioni Romanovski", relacao: "Amigo da família", video: "videos/ghioni.mp4", capa: ""},
-    {nome: "Tia Preta", relacao: "Tia do Davi", video: "videos/tia-preta.mp4", capa: ""},
+    {nome: "Dinda Preta", relacao: "Dinda do Davi", video: "videos/tia-preta.mp4", capa: ""},
     {nome: "Nayara", relacao: "Prima do Davi", video: "videos/nayara.mp4", capa: ""},
-    {nome: "Vó Maria", relacao: "Vó do Davi", video: "videos/vó-maria.mp4", capa: ""}
+    {nome: "Vó Maria", relacao: "Vó do Davi", video: "videos/vó-maria.mp4", capa: ""},
+    {nome: "Tia Leo", relacao: "Tia do Davi", video: "videos/tia-leo.mp4", capa: ""}
   ]
 };
 // ----- FIM DA ÁREA DE EDIÇÃO --------------------------------------------
